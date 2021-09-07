@@ -1,11 +1,25 @@
-# Script
+# SW 리더십 세미나 출결 Script
 # venv tf24
+# 이미경
 
 '''
 1) 학생 구분 : 학번_이름
 2) 이 로그에는 없을 수 있지만, 학생 별로 overlap되는 시간들이 있을 수 있어요. overlap되는 시간은 제거되도록 해야 해요.
 3) 참여 누적 시간이 전체 수업시간의 85% 이상이 되면 출석 / 그 이외에는 결석
 4) 수업 시작 후 5분 이후에 들어오면 지각이에요.
+
+- 출결 사유 기재하기
+- 수업 일찍 끝나면 일찍 끝난 시간 기준으로 하기
+- 결과물 엑셀로 만들기
+- 매주 출석 공지로
+- claim을 1주일 동안 받기, 지나면 수정 불가
+- 사캠 3개 다 신청 - 신청 완료
+- 기말과제
+- 3번 대체 공휴일 - 녹화
+- 매주 수업 시간 전에 동창회관 우체국 아래층? 202호? : 김경주 선생님, 연사님께 드릴 주차권/참여록/등등 받아오기
+- 컴퓨터공학 ewha.ac.kr 계정 받아서 로그인 - 공동 호스트 - 박사 언니 여쭤보기 - 없다 하심
+- 첫 2주는 엑셀은 보여주되 다 출석으로 인정
+- 연사님 강연은 신공 152호
 '''
 
 import pandas as pd
@@ -105,10 +119,8 @@ file.columns = ['name', 'email', 'in_time', 'out_time', 'remain_time', 'guest', 
 # 정규표현식으로 [8글자_이름] 형식인 사람들과 아닌 사람들 데이터프레임 각각 생성
 file_1 = file.loc[file.name.str.contains(r'(\w{7,8}_\w*)')]  # 정규표현식에 해당하는 이름들만 새로운 데이터프레임
 file_1 = file_1.iloc[:, [0, 2, 3]]  # 이름, 들어온시간, 나간시간 컬럼만 남기기
-file_0 = file_1.sort_values(by=['name', 'in_time'], ascending=[True, True])  ##### 이 부분에 문제가 있음!!!!!!!!!
-file_1 = file_0.sort_values(by=['name', 'in_time'], ascending=[True, True])  # 이름 다음으로 들어오는 시간 순 정렬
 file_1['name'] = file_1['name'].map(remove)  # 이름 중에 '1871057_현오주 (오주 현)' 와 같은 값이 있어서 처리
-
+file_1 = file_1.sort_values(by=['name', 'in_time'], ascending=[True, True])  # 이름 다음으로 들어오는 시간 순 정렬
 file_2 = file.loc[file.name.str.contains(r'(\w{7,8}_\w*)') == False]  # 정규표현식에 해당하지 않는 이름들
 file_2 = file_2.iloc[:, [0, 2, 3]]
 
@@ -160,7 +172,6 @@ result_1 = result_1.drop(['attendance', 'late'], axis=1)
 ## 수업 시작 시간과 끝나는 시간 입력하고 run
 ## overlap 시간 계산에 문제가 있음 (정렬 이상) : 초기화 부분 각주 제거해서 실행
 ## 이름이 정규표현식 형태가 아닌 사람은 수작업 필요
-
 
 '''
 file = 원본 출결 파일

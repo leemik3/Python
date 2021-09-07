@@ -63,9 +63,9 @@ def get_overlap(df):
 
 
 # 수업 시작 시간, 수업 끝나는 시간 - 형식 datetime.time, 강의 시간 - 형식 int 미리 설정
-start_time = "2021-06-15 12:30:00"
+start_time = "2021-06-15 17:00:00"
 start_time = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S').time()
-end_time = "2021-06-15 13:45:00"
+end_time = "2021-06-15 17:20:00"
 end_time = datetime.strptime(end_time, '%Y-%m-%d %H:%M:%S').time()
 lecture_time = int((to_datetime(end_time)-to_datetime(start_time)).seconds/60)  # 강의 시간
 
@@ -112,7 +112,7 @@ def get_result(df):
 
 
 # 4번째 행부터 읽어오기
-file = pd.read_csv("participants_86900492063_210615_스타트.csv", header=3)
+file = pd.read_csv("0906_participants_86048204364.csv", header=3)
 file.columns = ['name', 'email', 'in_time', 'out_time', 'remain_time', 'guest', 'record_YN']
 
 
@@ -151,6 +151,8 @@ file_1['record_time'] = file_1['record_time'].map(lambda x: int(x.seconds/60))
 # overlap 되는 시간 계산
 overlap = pd.DataFrame(file_1.groupby('name')['in_time'].apply(list))
 overlap['out_time'] = file_1.groupby('name')['out_time'].apply(list)
+
+
 overlap['overlaptime'] = overlap.apply(get_overlap, axis=1)
 #overlap['overlaptime'] = overlap['overlaptime'].map(lambda x: 0)  #overlap 되는 시간 오류 있을 경우 그냥 0으로 초기화
 
@@ -166,17 +168,20 @@ result_1['late'] = result_1['in_time'].map(check_late)
 result_1['result'] = result_1.apply(get_result, axis=1)
 result_1 = result_1.drop(['attendance', 'late'], axis=1)
 
-
+file_2.to_excel('0906_비정상출결.xlsx')
+result_1.to_excel("0906.xlsx")
 
 
 ## 수업 시작 시간과 끝나는 시간 입력하고 run
 ## overlap 시간 계산에 문제가 있음 (정렬 이상) : 초기화 부분 각주 제거해서 실행
 ## 이름이 정규표현식 형태가 아닌 사람은 수작업 필요
-
 '''
+
 file = 원본 출결 파일
 file_1 = 정규표현식 이름에 해당하는 데이터
 file_2 = 정규표현식 이름에 해당 않는 데이터
 overlap = 강의 들어온 시간 나간 시간 겹치는 경우
 result_1 = 최종 출결 결과 데이터
+
+
 '''

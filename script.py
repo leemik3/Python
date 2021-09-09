@@ -250,7 +250,23 @@ list_0.rename(columns={'account':'사용자 계정', 'in_time':'입장 시간', 
 list_1.rename(columns={'account':'사용자 계정', 'in_time':'입장 시간', 'pure_record_time':'기록 시간', 'result':'출결 결과'})
 list_2.rename(columns={'account':'사용자 계정', 'in_time':'입장 시간', 'pure_record_time':'기록 시간', 'result':'출결 결과'})
 
-list_0.to_excel("tess.xlsx")
+
+# 엑셀 내보내기
+
+with pd.ExcelWriter('0_0906_출결결과.xlsx') as writer:
+    list_0.to_excel(writer, sheet_name='출결 결과')
+    file_2.to_excel(writer, sheet_name='비정상 출결')
+
+
+with pd.ExcelWriter('1_0906_출결결과.xlsx') as writer:
+    list_1.to_excel(writer, sheet_name='출결 결과')
+    file_2.to_excel(writer, sheet_name='비정상 출결')
+
+
+with pd.ExcelWriter('2_0906_출결결과.xlsx') as writer:
+    list_2.to_excel(writer, sheet_name='출결 결과')
+    file_2.to_excel(writer, sheet_name='비정상 출결')
+
 '''
 
 file_2.to_excel('0906_비정상출결.xlsx')

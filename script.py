@@ -8,23 +8,20 @@
 3) 참여 누적 시간이 전체 수업시간의 85% 이상이 되면 출석 / 그 이외에는 결석
 4) 수업 시작 후 5분 이후에 들어오면 지각이에요.
 
-- 출결 사유 기재하기
 - 수업 일찍 끝나면 일찍 끝난 시간 기준으로 하기
-- 결과물 엑셀로 만들기
-- 매주 출석 공지로
-- claim을 1주일 동안 받기, 지나면 수정 불가
-- 사캠 3개 다 신청 - 신청 완료
-- 기말과제
-- 3번 대체 공휴일 - 녹화
-- 매주 수업 시간 전에 동창회관 우체국 아래층? 202호? : 김경주 선생님, 연사님께 드릴 주차권/참여록/등등 받아오기
-- 컴퓨터공학 ewha.ac.kr 계정 받아서 로그인 - 공동 호스트 - 박사 언니 여쭤보기 - 없다 하심
-- 첫 2주는 엑셀은 보여주되 다 출석으로 인정
-- 연사님 강연은 신공 152호
 '''
 
 '''
 파일명, 수업 시작 시간, 끝나는 시간, 저장할 파일명 확인
 '''
+
+# 값 변경 : **파일명, **수업날짜(0906), 수업시작시간, **끝나는 시간 - 시간만 신경 쓰면 됨
+file_name = "0906_participants_86048204364.csv"
+lecture_date = '0906'
+start_time = "2021-06-15 17:00:00"
+end_time = "2021-06-15 17:20:00"
+
+
 
 import pandas as pd
 import re
@@ -67,9 +64,7 @@ def get_overlap(df):
 
 
 # 수업 시작 시간, 수업 끝나는 시간 - 형식 datetime.time, 강의 시간 - 형식 int 미리 설정
-start_time = "2021-06-15 17:00:00"
 start_time = datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S').time()
-end_time = "2021-06-15 17:20:00"
 end_time = datetime.strptime(end_time, '%Y-%m-%d %H:%M:%S').time()
 lecture_time = int((to_datetime(end_time)-to_datetime(start_time)).seconds/60)  # 강의 시간
 
@@ -139,7 +134,7 @@ def acc_result(df):
         return df['result']
 
 # 4번째 행부터 읽어오기
-file = pd.read_csv("0906_participants_86048204364.csv", header=3)
+file = pd.read_csv(file_name, header=3)
 file.columns = ['name', 'email', 'in_time', 'out_time', 'remain_time', 'guest', 'record_YN']
 
 
@@ -253,17 +248,17 @@ list_2.rename(columns={'account':'사용자 계정', 'in_time':'입장 시간', 
 
 # 엑셀 내보내기
 
-with pd.ExcelWriter('0_0906_출결결과.xlsx') as writer:
+with pd.ExcelWriter('0_'+lecture_date+'_출결결과.xlsx') as writer:
     list_0.to_excel(writer, sheet_name='출결 결과')
     file_2.to_excel(writer, sheet_name='비정상 출결')
 
 
-with pd.ExcelWriter('1_0906_출결결과.xlsx') as writer:
+with pd.ExcelWriter('1_'+lecture_date+'_출결결과.xlsx') as writer:
     list_1.to_excel(writer, sheet_name='출결 결과')
     file_2.to_excel(writer, sheet_name='비정상 출결')
 
 
-with pd.ExcelWriter('2_0906_출결결과.xlsx') as writer:
+with pd.ExcelWriter('2_'+lecture_date+'_출결결과.xlsx') as writer:
     list_2.to_excel(writer, sheet_name='출결 결과')
     file_2.to_excel(writer, sheet_name='비정상 출결')
 

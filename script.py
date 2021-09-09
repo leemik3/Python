@@ -3,25 +3,15 @@
 # 이미경
 
 '''
-1) 학생 구분 : 학번_이름
-2) 이 로그에는 없을 수 있지만, 학생 별로 overlap되는 시간들이 있을 수 있어요. overlap되는 시간은 제거되도록 해야 해요.
-3) 참여 누적 시간이 전체 수업시간의 85% 이상이 되면 출석 / 그 이외에는 결석
-4) 수업 시작 후 5분 이후에 들어오면 지각이에요.
-
-- 수업 일찍 끝나면 일찍 끝난 시간 기준으로 하기
+값 변경 : **파일명, **수업날짜(0906), 수업시작시간, **끝나는 시간 - 시간만 신경 쓰면 됨
 '''
-
-'''
-파일명, 수업 시작 시간, 끝나는 시간, 저장할 파일명 확인
-'''
-
-# 값 변경 : **파일명, **수업날짜(0906), 수업시작시간, **끝나는 시간 - 시간만 신경 쓰면 됨
 file_name = "0906_participants_86048204364.csv"
 lecture_date = '0906'
 start_time = "2021-06-15 17:00:00"
 end_time = "2021-06-15 17:20:00"
 
 
+# ---------------------------------------------#
 
 import pandas as pd
 import re
@@ -230,6 +220,7 @@ file_2 = file_2.drop(drop_index)
 file_2['record_time'] = file_2['out_time'].map(to_datetime) - file_2['in_time'].map(to_datetime)
 file_2['record_time'] = file_2['record_time'].map(lambda x: int(x.seconds/60))
 
+file_2.rename(columns={'name':'프로필 이름', 'email' : '사용자 계정', 'in_time':'입장 시간', 'out_time':'퇴장 시간', 'record_time':'체류 시간'}, inplace=True)
 
 # 3개 분반
 list_0 = pd.merge(list_0, result_1, how='left', on='학번')
@@ -241,9 +232,10 @@ list_1['result'] = list_1['result'].fillna('결석')
 list_2['result'] = list_2['result'].fillna('결석')
 
 
-list_0.rename(columns={'account':'사용자 계정', 'in_time':'입장 시간', 'pure_record_time':'기록 시간', 'result':'출결 결과'})
-list_1.rename(columns={'account':'사용자 계정', 'in_time':'입장 시간', 'pure_record_time':'기록 시간', 'result':'출결 결과'})
-list_2.rename(columns={'account':'사용자 계정', 'in_time':'입장 시간', 'pure_record_time':'기록 시간', 'result':'출결 결과'})
+list_0.rename(columns={'account':'사용자 계정', 'in_time':'입장 시간', 'pure_record_time':'기록 시간', 'result':'출결 결과'}, inplace=True)
+list_1.rename(columns={'account':'사용자 계정', 'in_time':'입장 시간', 'pure_record_time':'기록 시간', 'result':'출결 결과'}, inplace=True)
+list_2.rename(columns={'account':'사용자 계정', 'in_time':'입장 시간', 'pure_record_time':'기록 시간', 'result':'출결 결과'}, inplace=True)
+
 
 
 # 엑셀 내보내기
@@ -264,15 +256,13 @@ with pd.ExcelWriter('2_'+lecture_date+'_출결결과.xlsx') as writer:
 
 '''
 
-file_2.to_excel('0906_비정상출결.xlsx')
-result_1.to_excel("0906.xlsx")
-
-
-
 file = 원본 출결 파일
 file_1 = 정규표현식 이름에 해당하는 데이터
 file_2 = 정규표현식 이름에 해당 않는 데이터
 overlap = 강의 들어온 시간 나간 시간 겹치는 경우
 result_1 = 최종 출결 결과 데이터
+list_0 : 세미나 출결 결과 데이터
+list_1 : 세미나Ⅰ 출결 결과 데이터
+list_2 : 세미나Ⅱ 출결 결과 데이터
 
 '''

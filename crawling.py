@@ -1,3 +1,4 @@
+# 네이버에서 특정 검색어를 검색한 뒤 나오는 블로그 30개의 본문을 scrap 해오기
 # 필요 패키지 : pandas, selenium, openpyxl
 # chromedriver chrome 버전에 맞게 설치
 
@@ -7,7 +8,7 @@ import pandas as pd
 
 driver = webdriver.Chrome("./chromedriver")
 
-# 중고 명품 검색한 view 페이지 진입
+# 특정 검색어를 검색한 view 페이지 진입 (static)
 driver.get("https://search.naver.com/search.naver?where=view&sm=tab_jum&query=%EC%A4%91%EA%B3%A0%EB%AA%85%ED%92%88")
 time.sleep(2)
 
